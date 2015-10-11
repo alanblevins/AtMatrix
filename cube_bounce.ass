@@ -1,0 +1,87 @@
+options
+{
+ skip_license_check on
+ ignore_dof on
+ AA_samples 6
+ outputs 1 1 STRING
+	"RGBA RGBA gfilter exr" 
+ xres 640
+ yres 480
+ GI_diffuse_depth 1
+ GI_glossy_depth 1
+ procedural_force_expand true
+}
+
+driver_exr
+{
+ name exr
+ filename "cube.exr"
+ half_precision true
+ tiled false
+ autocrop true
+}
+
+gaussian_filter
+{
+ name gfilter
+}
+
+persp_camera
+{
+ name shot_cam
+ shutter_end 1
+ fov 45
+ matrix 1 1 MATRIX
+   0.8405666034956818 2.7755575615628914e-017 -0.54170821028274363 0.0 
+   -0.25097126601587372 0.88620357923121251 -0.38943117465372179 0.0 
+   0.48006375485150177 0.46329603511986595 0.74491313260009662 0.0 
+   7.7394385013920992 7.2291357733069015 10.339049094182071 1.0
+}
+
+image
+{
+ name sky_exr
+ filename sky.exr
+}
+
+skydome_light
+{
+ name sun
+ resolution 2000
+ format latlong
+ color sky_exr
+ samples 3
+ exposure 1
+}
+
+standard
+{
+ name dirt
+ Kd_color 0.56 0.49 0.41
+}
+
+standard
+{
+ name white
+ Kd_color 0.7 0.7 0.7
+ Ks 0.2
+ Ks_color 0.8 0.8 0.8
+}
+
+plane {
+ name ground
+ shader dirt
+ normal 0 1 0
+}
+
+box {
+ name cube
+ min -1 -1 -1 
+ max 1 1 1
+ shader white
+ matrix 1 1 MATRIX
+ -0.250910905721 -2.11630105305e-005 -0.968010184317 0.0 
+ 0.968009836175 -0.000853880364232 -0.250910796814 0.0 
+ -0.00082125486093 -0.99999963522 0.000234733897924 0.0 
+ -1.58338329674 1.01712170051 0.758534792172 1.0
+}
