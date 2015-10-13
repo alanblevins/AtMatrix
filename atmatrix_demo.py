@@ -61,23 +61,28 @@ def set_node_xform(node, transform):
         AiNodeSetMatrix(node, "matrix", xform_to_matrix(transform))
 
         
-def xform_to_matrix(transform16):
-    """Make a new AtMatrix from an array
+def xform_to_matrix(transform16, matrix=None):
+    """Update or make a new AtMatrix from an array
     
     Create an AtMatrix and set its values from 
     a transform array of 16 entries.
     
     Args:
         transform16 (list(float)): 16-entry python array
+        matrix (AtMatrix): existing matrix, or None if creating a new one
         
     Returns:
-        AtMatrix: New, initialized matrix
+        AtMatrix: New or updated matrix with values set
     """
-    transform = AtMatrix()
+    if matrix is None:
+        # Can early-out here with argument expansion if creating
+        # a new matrix
+        return AtMatrix(*transform16)
+    
     for y in range(4):
         for x in range(4):
-            transform.__setattr__("a%d%d"%(y, x), transform16[y*4+x])    
-    return transform
+            matrix.__setattr__("a%d%d"%(y, x), transform16[y*4+x])    
+    return matrix
 
 if __name__ == "__main__":
     # Read the transforms dumped from Maya
